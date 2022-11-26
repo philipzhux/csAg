@@ -5,9 +5,9 @@
 ### Grading
 
 ```Python
-from cuhk_ag.pattern import Pattern
-from cuhk_ag.grader import Grader
-from cuhk_ag.extract import Extracter
+from csAg.pattern import Pattern
+from csAg.grader import Grader
+from csAg.extract import Extracter
 import os
 if __name__ == "__main__":
     # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
@@ -68,10 +68,10 @@ if __name__ == "__main__":
 ### Plagiarism checker
 
 ```Python
-from cuhk_ag.pattern import Pattern
-from cuhk_ag.extract import Extracter
-from cuhk_ag.mosser import Mosser
-from cuhk_ag.concat import Concater
+from csAg.pattern import Pattern
+from csAg.extract import Extracter
+from csAg.mosser import Mosser
+from csAg.concat import Concater
 import os
 if __name__ == "__main__":
     # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
