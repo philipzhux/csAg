@@ -1,6 +1,6 @@
-from cuhk_ag.pattern import Pattern
-from cuhk_ag.grader import Grader
-from cuhk_ag.extract import Extracter
+from csAg.pattern import Pattern
+from csAg.grader import Grader
+from csAg.extract import Extracter
 import os
 if __name__ == "__main__":
     # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
