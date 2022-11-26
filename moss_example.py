@@ -12,6 +12,9 @@ if __name__ == "__main__":
                           destDir="/tmp/a2/", pattern=pattern)
     concater = Concater(destDir="./concat/",concernFiles=["hw2.cpp"],extracter=extracter)
     concater.concat(output_extension="cpp")
+    # supported languages: "c", "cc", "java", "ml", "pascal", "ada", "lisp", "scheme",
+    # "haskell", "fortran", "ascii", "vhdl", "perl", "matlab", "python", "mips", "prolog",
+    # "spice", "vb", "csharp", "modula2", "a8086", "javascript", "plsql", "verilog"
     mosser = Mosser(srcDir="./concat/", language="cc", extension="cpp",
                     studentList=extracter.getStudentList(), templateFile="/tmp/source/hw2.cpp")
     # mosser.setResultUrl("http://moss.stanford.edu/results/9/419110195684")
