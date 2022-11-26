@@ -1,5 +1,3 @@
-# from cuhk_ag import grader
-# from cuhk_ag.extract import Extracter
 from cuhk_ag.pattern import Pattern
 from cuhk_ag.grader import Grader
 from cuhk_ag.extract import Extracter
