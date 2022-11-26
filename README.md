@@ -58,6 +58,9 @@ if __name__ == "__main__":
                     grading=grading, scoreJSON="./score.json", extractor=extracter)
     grader.compileAll()
     grader.runAll()
+    # with manual false, grading callback is called to grade
+    # otherwise, the program will print student output and 
+    # halt to wait for score input, and record the score
     grader.gradeAll(manual=False)
     grader.saveScore()
 ```
