@@ -1,6 +1,6 @@
 from .pattern import Pattern
 from .extract import Extracter
-import os, subprocess, tempfile, json
+import os, subprocess, tempfile, json, shlex
 class Grader:
     def __init__(self, concernFiles, compiling, running, grading, scoreJSON, extractor):
         self.compiled_output = dict()
@@ -21,16 +21,28 @@ class Grader:
     
             
     def runAll(self, each_timeout = 10):
-        handles = []
         for sid in self.compiled_output:
             runCommand = self.running(self.compiled_output[sid])
             outputFile = os.path.join(tempfile.gettempdir(),f"{sid}.output")
             self.run_output[sid] = outputFile
+            if "|" in runCommand:    
+                cmd_parts = runCommand.split('|')
+            else:
+                cmd_parts = []
+                cmd_parts.append(runCommand)
+            i = 0
+            p = {}
             with open(outputFile,"w") as output:
-                handle = subprocess.Popen(list(runCommand.split()), stdout=output)
-                handles.append(handle)
-        for handle in handles: handle.wait(each_timeout)
-            
+                for cmd_part in cmd_parts:
+                    cmd_part = cmd_part.strip()
+                    if i == 0:
+                        p[i]=subprocess.Popen(shlex.split(cmd_part),stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    elif i == len(cmd_parts)-1:
+                        p[i]=subprocess.Popen(shlex.split(cmd_part),stdin=p[i-1].stdout, stdout=output, stderr=output)
+                    else:
+                        p[i]=subprocess.Popen(shlex.split(cmd_part),stdin=p[i-1].stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    i = i +1
+                exit_code = p[0].wait(each_timeout)
     
     def gradeAll(self, manual = False):
         for sid in self.run_output:
