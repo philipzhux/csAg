@@ -9,7 +9,6 @@ class Extracter:
         self.extracted = False
         self.featureFiles = featureFiles
 
-
     def extract(self):
         os.makedirs(self.destDir, exist_ok=True)
         for fn in os.listdir(self.srcDir):   # get the list of files
