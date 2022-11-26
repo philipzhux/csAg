@@ -35,7 +35,9 @@ class Grader:
             with open(outputFile,"w") as output:
                 for cmd_part in cmd_parts:
                     cmd_part = cmd_part.strip()
-                    if i == 0:
+                    if i==0 and i == len(cmd_parts)-1:
+                        p[i]=subprocess.Popen(shlex.split(cmd_part),stdin=None, stdout=output, stderr=output)
+                    elif i == 0:
                         p[i]=subprocess.Popen(shlex.split(cmd_part),stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     elif i == len(cmd_parts)-1:
                         p[i]=subprocess.Popen(shlex.split(cmd_part),stdin=p[i-1].stdout, stdout=output, stderr=output)
@@ -45,15 +47,18 @@ class Grader:
                 exit_code = p[0].wait(each_timeout)
     
     def gradeAll(self, manual = False):
+        try:
+            with open(self.scoreJSON,"r") as f:
+                self.scores = json.load(f)
+        except: pass
         for sid in self.run_output:
             if sid in self.scores: continue
             if not manual: self.scores[sid] = self.grading(self.run_output[sid])
             else:
                 print(f"============== Manually scoring for {sid} ==============")
-                print("Program Output:")
                 with open(self.run_output[sid],"r") as outputFile:
-                    for line in outputFile.getlines(): print(line)
-                print(f"============== End of program output ==============")
+                    for line in outputFile.readlines(): print(line)
+                print(f"================= End of program output =================")
                 while True:
                     score = input("Input the student score, -1 to save parital results: ")
                     try: 
