@@ -60,13 +60,16 @@ class Grader:
                     for line in outputFile.readlines(): print(line)
                 print(f"================= End of program output =================")
                 while True:
-                    score = input("Input the student score, -1 to save parital results: ")
                     try: 
+                        score = input("Input the student score, interrupt to save parital results: ")
                         score = float(score)
-                        if score==-1: self.saveScore(append=True)
-                        else: break
+                        break
+                    except KeyboardInterrupt:
+                        print("\nInterrupted, saving partial results...")
+                        self.saveScore()
+                        exit()
                     except: 
-                        print("Interrupted, saving partial results.")
+                        print("\nInvalid Input. Retrying...")
                 self.scores[sid] = score
 
     def saveScore(self, scoreJSON = None, append = False):
