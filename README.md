@@ -2,6 +2,10 @@
 
 ## Usage
 
+* Extractor: Extract student submission (zip file) with name of certain format and link the student id with the extracted source. Source files (the directory located by the existence of feature file, in regard of students's directory tree structure) are extracted to destDir/sid. The extractor can be passed to grader to further grade the files.
+
+TODO: More documentations and possibly bug fixes
+
 ### Grading
 
 ```Python
@@ -92,4 +96,3 @@ if __name__ == "__main__":
 
 ```
 
-TODO: More documentations and possibly bug fixes
