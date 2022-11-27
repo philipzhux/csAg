@@ -4,6 +4,12 @@
 
 * Extractor: Extract student submission (zip file) with name of certain format and link the student id with the extracted source. Source files (the directory located by the existence of feature file, in regard of students's directory tree structure) are extracted to destDir/sid. The extractor can be passed to grader to further grade the files.
 
+* Grader: Actually grading the extracted files from extractor. Need to feed three callback functions as the below example indicates.
+
+* Concater: Prepare the extracted files for plagiarism detection when there are multiple source/header files in the code project
+  
+* Mosser: plagiarism detection and auto generate list of students according to similarity threshold set
+
 TODO: More documentations and possibly bug fixes
 
 ### Grading
