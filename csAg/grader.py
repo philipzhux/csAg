@@ -53,24 +53,28 @@ class Grader:
         except: pass
         for sid in self.run_output:
             if sid in self.scores: continue
-            if not manual: self.scores[sid] = self.grading(self.run_output[sid])
-            else:
-                print(f"============== Manually scoring for {sid} ==============")
-                with open(self.run_output[sid],"r") as outputFile:
-                    for line in outputFile.readlines(): print(line)
-                print(f"================= End of program output =================")
-                while True:
-                    try: 
-                        score = input("Input the student score, interrupt to save parital results: ")
-                        score = float(score)
-                        break
-                    except KeyboardInterrupt:
-                        print("\nInterrupted, saving partial results...")
-                        self.saveScore()
-                        exit()
-                    except: 
-                        print("\nInvalid Input. Retrying...")
-                self.scores[sid] = score
+            grading = self.__manualGrader if manual else self.grading
+            self.scores[sid] = grading(self.run_output[sid])
+            print(f"[INFO] Graded {sid}: {self.scores[sid]}.")
+
+    def __manualGrader(self,run_output):
+        print(f"============== Manually scoring starts ==============")
+        with open(run_output,"r") as outputFile:
+            for line in outputFile.readlines(): print(line)
+        print(f"================= End of program output =================")
+        while True:
+            try: 
+                score = input("Input the student score, interrupt to save parital results: ")
+                score = float(score)
+                break
+            except KeyboardInterrupt:
+                print("\n[INFO] Interrupted, saving partial results...")
+                self.saveScore()
+                exit()
+            except: 
+                print("\n[INFO] Invalid Input. Retrying...")
+        return score
+
 
     def saveScore(self, scoreJSON = None, append = False):
         if not scoreJSON: scoreJSON = self.scoreJSON
