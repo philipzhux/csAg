@@ -1,13 +1,22 @@
 from .pattern import Pattern
-import os, zipfile
+import os, zipfile, glob
 class Extracter:
-    def __init__(self, featureFiles, srcDir , destDir, pattern = Pattern()):
+    def __init__(self, featureFiles, srcDir , destDir, pattern = Pattern(), skipExtract = False):
         self.srcDir = srcDir
         self.destDir = destDir
         self.pattern = pattern
         self.studentList = []
         self.extracted = False
         self.featureFiles = featureFiles
+        if skipExtract: self.skipExtract()
+    
+    def skipExtract(self):
+        for ent in glob.glob(self.destDir):
+            fn = ent.split("/")[-1]
+            if fn.isnumeric(): 
+                self.studentList.append(fn)
+                self.extracted = True
+
 
     def extract(self):
         os.makedirs(self.destDir, exist_ok=True)

@@ -8,7 +8,7 @@ if __name__ == "__main__":
     pattern = Pattern(format=("{}_{}_{}", 1))
     extracter = Extracter(featureFiles=["hw2.cpp"],
                           srcDir="/Users/philip/dev/gradebook_CSC315022103207_Assignment202_2022-11-12-22-08-00",
-                          destDir="/tmp/a2/", pattern=pattern)
+                          destDir="/tmp/a2/", pattern=pattern, skipExtract=False)
 
     def compiling(workplace_path):
         # callback function
