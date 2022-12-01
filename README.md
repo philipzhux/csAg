@@ -1,4 +1,4 @@
-# CUHK CS Automated Grading Tools
+# csAg: CUHK CS Automated Grading Tools
 
 ## Usage
 
