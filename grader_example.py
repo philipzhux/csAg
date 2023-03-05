@@ -32,7 +32,7 @@ if __name__ == "__main__":
         # return ["output1.txt"]
         workspace_path = os.path.dirname(executable_path)
         subprocess.call(f"echo {executable_path}/hello world 1 > {workspace_path}/output1.txt", shell=True)
-        subprocess.call(f"echo {executable_path}/hello world 1 > {workspace_path}/output2.txt", shell=True)
+        subprocess.call(f"echo {executable_path}/hello world 2 > {workspace_path}/output2.txt", shell=True)
         return [f"{workspace_path}/output1.txt",f"{workspace_path}/output2.txt"]
 
     def grading(run_output_paths):
