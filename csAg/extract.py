@@ -41,7 +41,7 @@ class Extracter:
                 print("Please call extract() first.")
                 return None
         for dir,_,files in os.walk(os.path.join(self.destDir, sid)):
-            if self.featureFiles and all(fF in files for fF in self.featureFiles): return dir
+            if self.featureFiles and any(fF in files for fF in self.featureFiles): return dir
         return None
 
     def getCodeFilePath(self,sid,watchFile):
