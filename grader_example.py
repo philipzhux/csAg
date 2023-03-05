@@ -1,6 +1,7 @@
 from csAg.pattern import Pattern
 from csAg.grader import Grader
 from csAg.extract import Extracter
+import subprocess
 import os
 if __name__ == "__main__":
     # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
@@ -21,17 +22,20 @@ if __name__ == "__main__":
 
     def running(executable_path):
         # callback function
-        # return running command in regard to executable_path
+        # return list of output files for grading cb
         # you can also do something else here
         # for example: 
         # os.system("demsg -c")
         # os.system(f"insmod {executable_path}")
         # os.system("rmmod program2.ko")
-        # return "dmesg | grep program2"
-        print(executable_path)
-        return f"echo {executable_path} | grep 120090191"
+        # subprocess.call(f"dmesg | grep program2 > {workspace_path}/output1.txt", shell=True)
+        # return ["output1.txt"]
+        workspace_path = os.path.dirname(executable_path)
+        subprocess.call(f"echo {executable_path}/hello world 1 > {workspace_path}/output1.txt", shell=True)
+        subprocess.call(f"echo {executable_path}/hello world 1 > {workspace_path}/output2.txt", shell=True)
+        return [f"{workspace_path}/output1.txt",f"{workspace_path}/output2.txt"]
 
-    def grading(run_output_path):
+    def grading(run_output_paths):
         # callback function
         # grade according to content of file at run_output_path
         # only useful when gradeAll is called with manual = Flase
@@ -43,7 +47,8 @@ if __name__ == "__main__":
         # for line in output:
         #     if "The child process has pid = " in line \
         #     and parse.parse("{}The child process has pid = {}",line)[-1].isnumeric(): score += 10
-        print(run_output_path)
+        for run_output_path in run_output_paths:
+            print(run_output_path)
         return 100
 
     grader = Grader(concernFiles=["hw2.cpp"], compiling=compiling, running=running,
