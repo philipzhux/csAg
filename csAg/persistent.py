@@ -1,6 +1,6 @@
 import os, hashlib
 import dill
-class Persistentizer:
+class Persister:
     def __init__(self, grader, sessionId = "default", restart = False, forcedStart = False):
         self.session = sessionId
         self.grader = grader

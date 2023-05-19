@@ -47,7 +47,7 @@ TODO: More documentations and possibly bug fixes
 from csAg.pattern import Pattern
 from csAg.grader import Grader
 from csAg.extract import Extracter
-from csAg.persistent import Persistentizer
+from csAg.persistent import Persister
 import subprocess
 import os
 if __name__ == "__main__":
@@ -105,10 +105,10 @@ if __name__ == "__main__":
                           srcDir="/Users/philip/dev/gradebook_CSC315022103207_Assignment202_2022-11-12-22-08-00",
                           destDir="/tmp/a2/", pattern=pattern)
     # @param scoreJSON: output score JSON file path
-    # Persistentizer: save persistent result in case of interruption
+    # Persister: save persistent result in case of interruption
     # to reduce repetition, also with a lock to prevent multiple run
     # at the same time.
-    with Persistentizer(grader = Grader(compile=compile, run=run,
+    with Persister(grader = Grader(compile=compile, run=run,
                     grade=grade, scoreJSON="./score.json", commentJSON="./comment.json", extractor=extracter),
                     sessionId="default", restart=False,forcedStart=False) as grader:
         grader.compileAll()

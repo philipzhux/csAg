@@ -17,14 +17,14 @@ class Grader:
     def compileAll(self):
         if not self.extractor.extracted: self.extractor.extract()
         for sid in self.extractor.getStudentList():
-            if sid in self.compiled_output: continue # added support to persistentizer
+            if sid in self.compiled_output: continue # added support to Persister
             workspacePath = self.extractor.getCodeDirPath(sid)
             if workspacePath: self.compiled_output[sid] = self.compiling(workspacePath)
     
             
     def runAll(self, each_timeout = 10):
         for sid in self.compiled_output:
-            if sid in self.run_output: continue # added support to persistentizer
+            if sid in self.run_output: continue # added support to Persister
             # runCommand = self.running(self.compiled_output[sid])
             # outputFile = os.path.join(tempfile.gettempdir(),f"{sid}.output")
             outputFile = self.running(self.compiled_output[sid])
@@ -58,7 +58,7 @@ class Grader:
                 self.comments = json.load(f)
         except: pass
         for sid in self.run_output:
-            if sid in self.scores: continue # added support to persistentizer
+            if sid in self.scores: continue # added support to Persister
             grading = self.__manualGrader if manual else self.grading
             output = grading(self.run_output[sid])
             if isinstance(output,dict):
