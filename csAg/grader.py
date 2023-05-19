@@ -1,27 +1,30 @@
 from .pattern import Pattern
 from .extract import Extracter
-import os, subprocess, tempfile, json, shlex
+import json
 class Grader:
-    def __init__(self, concernFiles, compiling, running, grading, scoreJSON, extractor):
+    def __init__(self, compile, run, grade, scoreJSON, commentJSON, extractor):
         self.compiled_output = dict()
         self.run_output = dict()
         self.scores = dict()
-        self.compiling = compiling
-        self.running = running
-        self.grading = grading
-        self.concernFiles = concernFiles
+        self.comments = dict()
+        self.compiling = compile
+        self.running = run
+        self.grading = grade
+        self.commentJSON = commentJSON
         self.scoreJSON = scoreJSON
         self.extractor = extractor
 
     def compileAll(self):
         if not self.extractor.extracted: self.extractor.extract()
         for sid in self.extractor.getStudentList():
+            if sid in self.compiled_output: continue # added support to persistentizer
             workspacePath = self.extractor.getCodeDirPath(sid)
             if workspacePath: self.compiled_output[sid] = self.compiling(workspacePath)
     
             
     def runAll(self, each_timeout = 10):
         for sid in self.compiled_output:
+            if sid in self.run_output: continue # added support to persistentizer
             # runCommand = self.running(self.compiled_output[sid])
             # outputFile = os.path.join(tempfile.gettempdir(),f"{sid}.output")
             outputFile = self.running(self.compiled_output[sid])
@@ -51,11 +54,17 @@ class Grader:
         try:
             with open(self.scoreJSON,"r") as f:
                 self.scores = json.load(f)
+            with open(self.commentJSON,"r") as f:
+                self.comments = json.load(f)
         except: pass
         for sid in self.run_output:
-            if sid in self.scores: continue
+            if sid in self.scores: continue # added support to persistentizer
             grading = self.__manualGrader if manual else self.grading
-            self.scores[sid] = grading(self.run_output[sid])
+            output = grading(self.run_output[sid])
+            if isinstance(output,dict):
+                self.scores[sid] = output["score"]
+                self.comments[sid] = output.get("comment","")
+            else: self.scores[sid] = output
             print(f"[INFO] Graded {sid}: {self.scores[sid]}.")
 
     def __manualGrader(self,run_outputs):
@@ -69,6 +78,7 @@ class Grader:
             try: 
                 score = input("Input the student score, interrupt to save parital results: ")
                 score = float(score)
+                comment = input("Input comment for the grade")
                 break
             except KeyboardInterrupt:
                 print("\n[INFO] Interrupted, saving partial results...")
@@ -76,7 +86,10 @@ class Grader:
                 exit()
             except: 
                 print("\n[INFO] Invalid Input. Retrying...")
-        return score
+        return {
+            "score": score,
+            "comment": comment,
+        }
 
 
     def saveScore(self, scoreJSON = None, append = False):
