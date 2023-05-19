@@ -3,16 +3,14 @@ from time import time
 
 class Pattern:
     def __init__(self,format = ("{}_{}_{}",1)):
-        def parser(s):
-            try:
-                ret = parse(format[0],s)[format[1]]
-            except:
-                ret = f"unknown_{time()}"
-            return ret
-        self.parser = parser
-
+        self.format = format
+    
     def parse(self,s):
-        return self.parser(s)
+        try:
+            ret = parse(self.format[0],s)[self.format[1]]
+        except:
+            ret = f"unknown_{time()}"
+        return ret
     
 
 if __name__=="__main__":
