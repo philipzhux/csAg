@@ -7,10 +7,10 @@ if __name__ == "__main__":
     # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
     # format of "XXXX_XX_119010486_XXX_..." can be defined as ("{}_{}_{}_{}",2)
     pattern = Pattern(format=("{}_{}_{}", 1))
-    extracter = Extracter(featureFiles=["hw2.cpp"],
+    extracter = Extracter(isCodePath=lambda files: all(file in files for file in ["hw2.cpp","makefile"]),
                           srcDir="/Users/philip/dev/gradebook_CSC315022103207_Assignment202_2022-11-12-22-08-00",
                           destDir="/tmp/a2/", pattern=pattern)
-    concater = Concater(destDir="./concat/",concernFiles=["hw2.cpp"],extracter=extracter)
+    concater = Concater(destDir="./concat/",concatFiles=["hw2.cpp"],extracter=extracter)
     concater.concat(output_extension="cpp")
     # supported languages: "c", "cc", "java", "ml", "pascal", "ada", "lisp", "scheme",
     # "haskell", "fortran", "ascii", "vhdl", "perl", "matlab", "python", "mips", "prolog",

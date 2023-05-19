@@ -1,17 +1,12 @@
 from csAg.pattern import Pattern
 from csAg.grader import Grader
 from csAg.extract import Extracter
+from csAg.persistent import Persistentizer
 import subprocess
 import os
 if __name__ == "__main__":
-    # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
-    # format of "XXXX_XX_119010486_XXX_..." can be defined as ("{}_{}_{}_{}",2)
-    pattern = Pattern(format=("{}_{}_{}", 1))
-    extracter = Extracter(featureFiles=["hw2.cpp"],
-                          srcDir="/Users/philip/dev/gradebook_CSC315022103207_Assignment202_2022-11-12-22-08-00",
-                          destDir="/tmp/a2/", pattern=pattern, skipExtract=False)
 
-    def compiling(workplace_path):
+    def compile(workplace_path):
         # callback function
         # workplace_path is the path that featureFiles resides (e.g. hw2.cpp)
         # do compile here like 
@@ -20,7 +15,7 @@ if __name__ == "__main__":
         print(workplace_path)
         return os.path.join(workplace_path, "a.out")
 
-    def running(executable_path):
+    def run(executable_path):
         # callback function
         # return list of output files for grading cb
         # you can also do something else here
@@ -35,7 +30,7 @@ if __name__ == "__main__":
         subprocess.call(f"echo {executable_path}/hello world 2 > {workspace_path}/output2.txt", shell=True)
         return [f"{workspace_path}/output1.txt",f"{workspace_path}/output2.txt"]
 
-    def grading(run_output_paths):
+    def grade(run_output_paths):
         # callback function
         # grade according to content of file at run_output_path
         # only useful when gradeAll is called with manual = Flase
@@ -49,11 +44,26 @@ if __name__ == "__main__":
         #     and parse.parse("{}The child process has pid = {}",line)[-1].isnumeric(): score += 10
         for run_output_path in run_output_paths:
             print(run_output_path)
-        return 100
+        return {
+            "score": 100,
+            "comment": "",
+        }
+    
 
-    grader = Grader(concernFiles=["hw2.cpp"], compiling=compiling, running=running,
-                    grading=grading, scoreJSON="./score.json", extractor=extracter)
-    grader.compileAll()
-    grader.runAll()
-    grader.gradeAll(manual=False)
-    grader.saveScore()
+    # format of "XXXX_119010486_XXXX_XXX_..." can be defined as ("{}_{}_{}",1)
+    # format of "XXXX_XX_119010486_XXX_..." can be defined as ("{}_{}_{}_{}",2)
+    pattern = Pattern(format=("{}_{}_{}", 1))
+    # isCodePath: 
+    # callable, @param: list: files of a particular path, @return: boolean: whether it is target path
+    # example: lambda files: "hw.cpp" in files / lambda files: any(file in files for file in ["hw.cpp","hw.py"])
+    extracter = Extracter(isCodePath=lambda files: all(file in files for file in ["hw2.cpp","makefile"]),
+                          srcDir="/Users/philip/dev/gradebook_CSC315022103207_Assignment202_2022-11-12-22-08-00",
+                          destDir="/tmp/a2/", pattern=pattern, skipExtract=False)
+
+    with Persistentizer(grader = Grader(compile=compile, run=run,
+                    grade=grade, scoreJSON="./score.json", commentJSON="./comment.json", extractor=extracter),
+                    sessionId="default", restart=False,forcedStart=False) as grader:
+        grader.compileAll()
+        grader.runAll()
+        grader.gradeAll(manual=False)
+        grader.saveScore()
